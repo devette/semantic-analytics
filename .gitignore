@@ -1,0 +1,9 @@
+*.swp
+bower_components
+node_packages
+node_modules
+
+target
+
+.idea
+*.iml

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="content-type" content="text/html; charset=utf-8">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1 maximum-scale=1">
+<title>Short selling register</title>
+
+<link rel="stylesheet" href="bower_components/bootstrap/dist/css/bootstrap.min.css">
+<link rel="stylesheet" href="bower_components/sparql-faceter/dist/semantic-faceted-search.css">
+</head>
+
+<body>
+
+<div id="nav"></div>
+
+<div ng-app="facetApp">
+  <div class="container-fluid" ng-controller="MainController as vm">
+    <div class="row">
+      <div class="col-md-12">
+        <h1>Short selling register</h1>
+        <div ng-if="vm.error">
+          <uib-alert type="danger">{{ vm.error }}</uib-alert>
+        </div>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-md-3">
+        <!-- Facets are defined here using the configurations defined in the controller -->
+        <seco-text-facet data-options="vm.facets.meldingtekst"></seco-text-facet>
+        <seco-timespan-facet data-options="vm.facets.positiedatum"></seco-timespan-facet>
+        <seco-basic-facet data-options="vm.facets.uitgevendeInstelling"></seco-basic-facet>
+        <seco-basic-facet data-options="vm.facets.meldingsplichtige"></seco-basic-facet>
+        <seco-basic-facet data-options="vm.facets.nettoShortpositie"></seco-basic-facet>
+        <seco-basic-facet data-options="vm.facets.positiejaar"></seco-basic-facet>
+        <seco-basic-facet data-options="vm.facets.positiemaand"></seco-basic-facet>
+        <seco-basic-facet data-options="vm.facets.isin"></seco-basic-facet>
+      </div>
+
+      <!-- Results view -->
+      <div class="col-md-9">
+        <img src="images/loading-lg.gif" ng-show="vm.isLoadingResults" />
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Meldingtekst</th>
+              <th>Meldingsplichtige</th>
+              <th>Positie datum</th>
+              <th>Uitgevende instelling</th>
+              <th>Isin</th>
+              <th>Netto shortpositie</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr ng-repeat="vermelding in vm.page">
+              <td>{{ vermelding.meldingtekst }}</td>
+              <td>{{ vermelding.meldingsplichtige }}</td>
+              <td>{{ vermelding.positiedatum | date:'dd-MM-yyyy'}} </td>
+              <td>{{ vermelding.uitgevendeInstelling }} </td>
+              <td>{{ vermelding.isin }} </td>
+              <td>{{ vermelding.nettoShortpositie }} %</td>
+            </tr>
+          </tbody>
+        </table>
+        <!-- Pagination -->
+        <div uib-pagination
+          class="pagination-sm"
+          max-size="10"
+          boundary-links="true"
+          rotate="false"
+          total-items="vm.totalCount"
+          ng-model="vm.pageNo"
+          ng-disabled="vm.isLoadingResults"
+          ng-change="vm.getPage()">
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="footer"></div>
+
+<script src="bower_components/jquery/dist/jquery.min.js"></script>
+<script src="bower_components/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="bower_components/lodash/dist/lodash.min.js"></script>
+<script src="bower_components/angular/angular.js"></script>
+<script src="bower_components/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+<script src="bower_components/angular-spinner/dist/angular-spinner.min.js"></script>
+<script src="bower_components/checklist-model/checklist-model.js"></script>
+<script src="bower_components/angular-paging-sparql-service/dist/sparql-service.js"></script>
+<script src="bower_components/sparql-faceter/dist/semantic-faceted-search.js"></script>
+<script src="bower_components/chart.js/dist/Chart.js"></script>
+<script src="bower_components/angular-chart.js/dist/angular-chart.js"></script>
+
+<script src="search-service.js"></script>
+<script src="search-controller.js"></script>
+</body>
+</html>
