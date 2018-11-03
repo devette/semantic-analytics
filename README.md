@@ -23,8 +23,8 @@
 from the root of the sources
 `mvn clean package`
 
-from the configclient-angular directory
-`cd configclient-angular`
+from the client-angular directory
+`cd client-angular`
 `bower install`
 
 # Running locally
@@ -32,7 +32,7 @@ from the configclient-angular directory
 After succesful installations
 
 `cd configserver/`
-`java -jar target/configserver-1.0-SNAPSHOT.jar`
+`java -jar target/server-1.0-SNAPSHOT.jar`
 
 Then navigate to
     - http://localhost:8080/index.html
