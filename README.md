@@ -1,5 +1,5 @@
 # Demo - Semantic Analytics (Using AFM short sell register)
-=======
+
 [![Build Status](https://travis-ci.org/devette/semantic-analytics.svg?branch=master)](https://travis-ci.org/devette/semantic-analytics)
 
 - with server
