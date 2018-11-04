@@ -102,6 +102,7 @@
             }
         };
 
+        //var endpointUrl = 'https://shortselldata.cfapps.io/short/sparql';
         var endpointUrl = 'http://localhost:8080/short/sparql';
 
         // We are building a faceted search for writers.

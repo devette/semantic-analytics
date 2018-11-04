@@ -18,27 +18,40 @@
 - Install Pivotal cloud foundry
     - https://run.pivotal.io
 
-# Installation
+# Building
 
 from the root of the sources
-`mvn clean package`
+- `mvn clean package`
 
 from the client-angular directory
-`cd client-angular`
-`bower install`
+- `cd client-angular`
+- `bower install`
 
 # Running locally
 
 After succesful installations
 
-`cd configserver/`
-`java -jar target/server-1.0-SNAPSHOT.jar`
+- `cd configserver/`
+    - `mvn test -Plocalhost` *or*
+    - `java -jar target/server-1.0-SNAPSHOT.jar`
 
 Then navigate to
     - http://localhost:8080/index.html
 
 # Running on the cloud
 
-Go to https://run.pivotal.io and sign up.
-`cf login`
-`cf push`
+### Prepare
+- Go to https://run.pivotal.io and sign up.
+- open a terminal
+- `cf login`
+
+### Server
+To run the server application in the cloud.
+- `cd server`
+- `cf push`
+
+### Client
+To run the client application in the cloud.
+- update the endpoint in `angular-client/search-service.js` to the given route for the server app.
+- `cd angular-client`
+- `cf push`

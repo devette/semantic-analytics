@@ -80,26 +80,38 @@
                     </execution>
                 </executions>
             </plugin>
-
-            <!--<plugin>-->
-                <!--<groupId>org.codehaus.mojo</groupId>-->
-                <!--<artifactId>exec-maven-plugin</artifactId>-->
-                <!--<version>${exec-maven-plugin.version}</version>-->
-                <!--<executions>-->
-                    <!--<execution>-->
-                        <!--<phase>test</phase>-->
-                        <!--<goals>-->
-                            <!--<goal>java</goal>-->
-                        <!--</goals>-->
-                        <!--<configuration>-->
-                            <!--<mainClass>nl.yeex.configuration.DatasetServer</mainClass>-->
-                            <!--<arguments>-->
-                                <!--<argument>${project.basedir}/../client-angular/</argument>-->
-                            <!--</arguments>-->
-                        <!--</configuration>-->
-                    <!--</execution>-->
-                <!--</executions>-->
-            <!--</plugin>-->
         </plugins>
     </build>
+
+
+    <profiles>
+        <profile>
+            <id>localhost</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>${exec-maven-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <phase>test</phase>
+                                <goals>
+                                    <goal>java</goal>
+                                </goals>
+                                <configuration>
+                                    <mainClass>nl.yeex.configuration.DatasetServer</mainClass>
+                                    <arguments>
+                                        <argument>${project.basedir}/../client-angular/</argument>
+                                        <!-- remove this argument to enable fetching the data from the dataprovider -->
+                                        <argument>no-update</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

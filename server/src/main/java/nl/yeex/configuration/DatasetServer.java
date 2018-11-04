@@ -3,6 +3,7 @@ package nl.yeex.configuration;
 import org.apache.jena.atlas.logging.LogCtl;
 import org.apache.jena.fuseki.Fuseki;
 import org.apache.jena.fuseki.main.FusekiServer;
+import org.apache.jena.fuseki.servlets.ServletBase;
 import org.apache.jena.fuseki.system.FusekiLogging;
 import org.apache.jena.query.Dataset;
 import org.apache.jena.query.DatasetAccessor;
@@ -10,6 +11,7 @@ import org.apache.jena.query.DatasetAccessorFactory;
 import org.apache.jena.query.DatasetFactory;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.riot.RDFDataMgr;
+import org.apache.log4j.Logger;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.TransformerConfigurationException;
@@ -30,7 +32,6 @@ import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
 import java.util.Timer;
 import java.util.TimerTask;
-import org.apache.log4j.Logger;
 
 
 public class DatasetServer {
@@ -39,19 +40,28 @@ public class DatasetServer {
     private static final int PORT = 8080;
     private static final int DELAY_HOUR = 60 * 60 * 1000;
     private static final int PERIOD_HOUR = 60 * 60 * 1000;
+    private static boolean noUpdate;
     private Logger logger = Logger.getLogger(DatasetServer.class.getName());
 
-    public static void main (String args[]) {
+    public static void main(String args[]) {
         configureLogging();
         String staticFileBase = (args.length > 0)? args[0]: null;
+        noUpdate = (args.length > 1) && "no-update".equalsIgnoreCase(args[1]);
         new DatasetServer(staticFileBase);
     }
 
     public DatasetServer(String staticFileBase) {
+        Dataset shortDataset;
+        if (noUpdate)  {
+            logger.info("No update set: Loading dataset from resources");
+            shortDataset = getDataset("short.rdf");
+        } else {
+            logger.info("Loading dataset from provider: " + DATAPROVIDER_URL);
+            File xmlFile = getDataFromProvider(DATAPROVIDER_URL, "short-", ".xml");
+            shortDataset = getShortSellDataset(xmlFile);
+        }
 
-        File xmlFile = getDataFromProvider(DATAPROVIDER_URL, "short-", ".xml");
-        Dataset shortDataset = getShortSellDataset(xmlFile);
-
+        ServletBase.CORS_ENABLED = true;
         final FusekiServer.Builder fusekiServerBuilder = FusekiServer.create()
                 .port(PORT)
                 .enablePing(true)
@@ -73,8 +83,10 @@ public class DatasetServer {
         });
         server.start() ;
 
-        final String uri = server.getJettyServer().getURI().toString();
-        scheduleDatasetUpdates(uri, "short", DELAY_HOUR, PERIOD_HOUR);
+        if (!noUpdate) {
+            final String uri = server.getJettyServer().getURI().toString();
+            scheduleDatasetUpdates(uri, "short", DELAY_HOUR, PERIOD_HOUR);
+        }
     }
 
     private Dataset getShortSellDataset(File datafile)  {

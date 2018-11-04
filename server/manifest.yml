@@ -1,7 +1,7 @@
 ---
 applications:
-- name: configserver
-  memory: 768M
+- name: server
+  memory: 1G
   instances: 1
   random-route: true
   path: target/server-1.0-SNAPSHOT.jar
